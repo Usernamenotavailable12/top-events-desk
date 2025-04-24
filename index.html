@@ -113,6 +113,12 @@
       right: 0;
     }
 
+    .carousel-wrapper {
+      position: relative;
+      width: 100%;
+      height: 320px;
+    }
+
     .carousel-container {
       align-self: stretch;
       background: url("https://www.ambassadoribet.com/_internal/ts-images/5da2b4d5-59f6-412a-82c3-f6a272b532be/dev/81558d7e-f4a1-4117-93e8-20a501dda763/d56ebf81b0a24144dab8dfa196fed1c5d65b10a2.png?auto=format%2Ccompress");
@@ -122,7 +128,7 @@
       border-radius: 0px;
       position: relative;
       width: 100%;
-      height: 320px;
+      height: 100%;
       overflow-x: auto;
       scrollbar-width: none;
       overflow-y: hidden;
@@ -250,6 +256,87 @@
       vertical-align: middle;
       display: inline-block;
     }
+
+    .scroll-button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 1.8rem;
+      height: 1.8rem;
+      background: #cf167d;
+      backdrop-filter: blur(10px);
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      transition: background 0.3s ease;
+    }
+
+    .scroll-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      opacity: .5;
+    }
+
+    .scroll-left {
+      left: 10px;
+    }
+
+    .scroll-right {
+      right: 10px;
+    }
+
+    .scroll-button svg {
+      width: 20px;
+      height: 20px;
+      fill: #FFF;
+    }
+
+    .carousel-wrapper {
+      .scroll-button {
+        opacity: 0;
+        transition: all 0.3s ease;
+      }
+    }
+
+    .carousel-wrapper:hover {
+      .scroll-button {
+        opacity: 1;
+      }
+    }
+
+    .carousel-wrapper:before {
+      content: "";
+      background-image: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.5));
+      display: inline-block;
+      width: 50px;
+      height: 320px;
+      position: absolute;
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+      right: 0;
+      top: 0;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .carousel-wrapper:after {
+      content: "";
+      background-image: linear-gradient(to left, transparent, rgba(0, 0, 0, 0.5));
+      display: inline-block;
+      width: 50px;
+      height: 320px;
+      position: absolute;
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+      left: 0;
+      top: 0;
+      z-index: 2;
+      pointer-events: none;
+    }
   </style>
 </head>
 
@@ -371,6 +458,27 @@
       const isDragging = useRef(false);
       const startX = useRef(0);
       const scrollLeftStart = useRef(0);
+      const [canScrollLeft, setCanScrollLeft] = useState(false);
+      const [canScrollRight, setCanScrollRight] = useState(true);
+
+      const checkScroll = () => {
+        if (containerRef.current) {
+          const { scrollLeft, scrollWidth, clientWidth } = containerRef.current;
+          setCanScrollLeft(scrollLeft > 0);
+          setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 1);
+        }
+      };
+
+      useEffect(() => {
+        const container = containerRef.current;
+        if (container) {
+          container.addEventListener('scroll', checkScroll);
+          checkScroll();
+        }
+        return () => {
+          if (container) container.removeEventListener('scroll', checkScroll);
+        };
+      }, [data]);
 
       const handleStart = (clientX) => {
         if (containerRef.current) {
@@ -396,6 +504,7 @@
           containerRef.current.style.scrollBehavior = 'smooth';
           containerRef.current.style.scrollSnapType = '';
         }
+        checkScroll();
       };
 
       const handleMouseDown = (e) => {
@@ -415,6 +524,20 @@
       const handleTouchMove = (e) => {
         if (isDragging.current) e.preventDefault();
         handleMove(e.touches[0].clientX);
+      };
+
+      const scrollLeft = () => {
+        if (containerRef.current) {
+          const cardWidth = 326 + 12; // Card width + gap
+          containerRef.current.scrollBy({ left: -cardWidth, behavior: 'smooth' });
+        }
+      };
+
+      const scrollRight = () => {
+        if (containerRef.current) {
+          const cardWidth = 326 + 12; // Card width + gap
+          containerRef.current.scrollBy({ left: cardWidth, behavior: 'smooth' });
+        }
       };
 
       if (error) {
@@ -438,46 +561,68 @@
       const bottomEvents = data.events.slice(halfLength);
 
       return (
-        <div
-          ref={containerRef}
-          className="carousel-container"
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleEnd}
-          onMouseLeave={handleEnd}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleEnd}
-          style={{ cursor: 'grab' }}
-        >
-          <div className="carousel-row">
-            <div className="carousel-track">
-              {topEvents.map((event) => (
-                <EventCard
-                  key={event.id}
-                  event={event}
-                  markets={data.markets}
-                  odds={data.odds}
-                  competitors={data.competitors}
-                  champs={data.champs}
-                  categories={data.categories}
-                />
-              ))}
-            </div>
-            <div className="carousel-track">
-              {bottomEvents.map((event) => (
-                <EventCard
-                  key={event.id}
-                  event={event}
-                  markets={data.markets}
-                  odds={data.odds}
-                  competitors={data.competitors}
-                  champs={data.champs}
-                  categories={data.categories}
-                />
-              ))}
+        <div className="carousel-wrapper">
+          <button
+            className="scroll-button scroll-left"
+            onClick={scrollLeft}
+            disabled={!canScrollLeft}
+            aria-label="Scroll left"
+          >
+            <svg viewBox="0 0 24 24">
+              <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+            </svg>
+          </button>
+          <div
+            ref={containerRef}
+            className="carousel-container"
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleEnd}
+            onMouseLeave={handleEnd}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleEnd}
+            style={{ cursor: 'grab' }}
+          >
+            <div className="carousel-row">
+              <div className="carousel-track">
+                {topEvents.map((event) => (
+                  <EventCard
+                    key={event.id}
+                    event={event}
+                    markets={data.markets}
+                    odds={data.odds}
+                    competitors={data.competitors}
+                    champs={data.champs}
+                    categories={data.categories}
+                  />
+                ))}
+              </div>
+              <div className="carousel-track">
+                {bottomEvents.map((event) => (
+                  <EventCard
+                    key={event.id}
+                    event={event}
+                    markets={data.markets}
+                    odds={data.odds}
+                    competitors={data.competitors}
+                    champs={data.champs}
+                    categories={data.categories}
+                  />
+                ))}
+              </div>
             </div>
           </div>
+          <button
+            className="scroll-button scroll-right"
+            onClick={scrollRight}
+            disabled={!canScrollRight}
+            aria-label="Scroll right"
+          >
+            <svg viewBox="0 0 24 24">
+              <path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z" />
+            </svg>
+          </button>
         </div>
       );
     };
