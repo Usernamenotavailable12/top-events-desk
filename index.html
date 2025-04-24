@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -48,10 +47,11 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
+    }
 
-      img {
-        margin: auto;
-      }
+    .card-f-block h3 img,
+    .card-th-block h3 img {
+      margin: auto;
     }
 
     .card-f-block h3 {
@@ -122,6 +122,13 @@
       position: relative;
       width: 100%;
       height: 320px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      overflow-y: hidden;
+    }
+
+    .carousel-container::-webkit-scrollbar {
+      display: none;
     }
 
     .carousel-row {
@@ -130,55 +137,14 @@
       gap: 5px;
       padding: 14px;
       padding-right: 0;
+      width: max-content;
     }
 
     .carousel-track {
       display: flex;
-      overflow-x: auto;
-      scroll-behavior: smooth;
       position: relative;
       user-select: none;
       gap: 12px;
-    }
-
-    .fade-left::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 117px;
-      height: 100%;
-      flex-shrink: 0;
-      background: linear-gradient(90deg, #121212 0%, rgba(18, 18, 18, 0.00) 88.89%);
-      border-radius: 0px;
-      z-index: 1;
-      pointer-events: none;
-      opacity: 0.5;
-      transition: opacity 0.3s ease;
-    }
-
-    .fade-right::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 117px;
-      height: 100%;
-      flex-shrink: 0;
-      background: linear-gradient(270deg, #121212 0%, rgba(18, 18, 18, 0.00) 88.89%);
-      border-radius: 16px;
-      z-index: 1;
-      pointer-events: none;
-      opacity: 0.5;
-      transition: opacity 0.3s ease;
-    }
-
-    .no-fade-left::before {
-      opacity: 0;
-    }
-
-    .no-fade-right::after {
-      opacity: 0;
     }
 
     .carousel-track .event-card:last-of-type {
@@ -196,14 +162,12 @@
       max-width: 80rem;
       padding-bottom: 1.5rem;
       padding-top: 1rem;
-      padding-bottom: 1rem;
       text-align: center;
     }
 
     .event-card {
       backdrop-filter: blur(30px);
       background: rgba(255, 255, 255, 0.02);
-      background-image: url('https://images.takeshape.io/default-event-background.jpg');
       background-size: cover;
       background-position: center;
       border-radius: 12px;
@@ -236,7 +200,6 @@
       text-overflow: ellipsis;
       white-space: nowrap;
     }
-
 
     .no-events-message {
       color: #4b5563;
@@ -274,14 +237,6 @@
       justify-content: space-between;
     }
 
-    .scrollbar-hide {
-      scrollbar-width: none;
-    }
-
-    .scrollbar-hide::-webkit-scrollbar {
-      display: none;
-    }
-
     #app-container {
       background-color: transparent;
       height: 320px;
@@ -294,152 +249,6 @@
       vertical-align: middle;
       display: inline-block;
     }
-
-    /*         @media (max-width: 768px) {
-            .carousel-container {
-                display: inline-flex;
-                overflow: hidden;
-                justify-content: flex-end;
-                align-items: center;
-                background: url(https://images.takeshape.io/5da2b4d5-59f6-412a-82c3-f6a272b532be/dev/cb93c5c1-791b-4edf-a146-00e17c27198a/ffa549b7395d5c97d05b17f87954629f.webp) lightgray 50% / cover no-repeat;
-            }
-
-            .carousel-track {
-                padding: 6px 10px;
-            }
-
-            .event-card {
-                width: 217px;
-                height: 120px;
-                aspect-ratio: 217/120;
-                padding: 6px;
-            }
-
-            .card-block-container {
-                height: 72%;
-                display: block;
-            }
-
-            .card-f-block {
-                width: 100%;
-                position: relative;
-                display: flex;
-                justify-content: space-between;
-            }
-
-            .card-name-block p {
-                position: inherit;
-                margin: 0;
-                transform: translateX(0);
-                color: #FFF;
-                opacity: 1;
-                font-family: "Noto Sans Ambassadori";
-                font-size: 10px;
-                font-style: normal;
-                font-weight: 400;
-                line-height: 12px;
-                max-width: 130px;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-
-            .card-date-text {
-                color: #FFF;
-                font-family: "Noto Sans Ambassadori";
-                font-size: 10px;
-                font-style: normal;
-                font-weight: 400;
-                line-height: 12px;
-            }
-
-            .card-s-block {
-                position: inherit;
-                width: auto;
-                align-content: center;
-                height: 100%;
-                justify-content: space-evenly;
-                display: flex;
-                flex-direction: column;
-                margin-left: 0;
-            }
-
-            .card-s-block h3 {
-                margin: 0;
-                color: #FFF;
-                font-family: "Noto Sans Ambassadori";
-                font-size: 12px;
-                font-style: normal;
-                font-weight: 400;
-                line-height: 12px;
-                max-width: 135px;
-                overflow: hidden;
-                white-space: nowrap;
-                text-overflow: ellipsis;
-            }
-
-            .card-score-text {
-                position: inherit;
-                margin: 0;
-                transform: translateX(0);
-                color: #F133FA;
-                font-family: "Noto Sans Ambassadori";
-                font-size: 14px;
-                font-style: normal;
-                font-weight: 400;
-                line-height: 14px;
-                padding: 4px;
-                gap: 10px;
-                border-radius: 4px;
-                border: 1px solid #3F0D64;
-            }
-
-            .card-th-block {
-                display: block;
-                position: inherit;
-                width: auto;
-                align-content: center;
-                height: 100%;
-            }
-
-            .card-s-th-container {
-                height: 84%;
-                width: 100%;
-                display: inline-flex;
-                justify-content: space-between;
-            }
-
-            .odds-row {
-                display: flex;
-                gap: 4px;
-                justify-content: space-between;
-                width: 100%;
-            }
-
-            .odd-item {
-                display: flex;
-                width: 65px;
-                box-sizing: border-box;
-                padding: 8px 4px;
-                justify-content: space-between;
-                align-items: center;
-                flex-shrink: 0;
-            }
-
-            .odd-item p {
-                color: #FFF;
-                font-family: "Noto Sans Ambassadori";
-                font-size: 14px;
-                font-style: normal;
-                font-weight: 700;
-                line-height: 16px;
-            }
-
-            .competitor-logo {
-                width: 16px;
-                height: 16px;
-                margin-right: 4px;
-            }
-        } */
   </style>
 </head>
 
@@ -461,9 +270,9 @@
     };
 
     const getOddsForMarket = (marketId, markets, odds) => {
-      const market = markets.find(m => m.id === marketId);
+      const market = markets.find((m) => m.id === marketId);
       if (!market) return [];
-      return market.oddIds.map(oddId => odds.find(o => o.id === oddId)).filter(Boolean);
+      return market.oddIds.map((oddId) => odds.find((o) => o.id === oddId)).filter(Boolean);
     };
 
     const backgroundImages = {
@@ -475,7 +284,7 @@
       },
       champs: {
         'premier-league': 'https://www.ambassadoribet.com/_internal/ts-images/5da2b4d5-59f6-412a-82c3-f6a272b532be/dev/22c4b458-ce8a-4c52-8486-259953496316/sdddddd-01.png?auto=format%2Ccompress',
-      }
+      },
     };
 
     const getBackgroundImage = (sportId, champId) => {
@@ -490,7 +299,7 @@
 
     const EventCard = ({ event, markets, odds, competitors, champs, categories }) => {
       const oddsData = getOddsForMarket(event.marketIds[0], markets, odds);
-      const [isMobile, setIsMobile] = React.useState(window.innerWidth <= 768);
+      const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
       const backgroundImage = getBackgroundImage(event.sportId, event.champId);
 
       useEffect(() => {
@@ -503,114 +312,51 @@
 
       const handleClick = () => {
         const url = `/sportsbook/event/${event.id}`;
-        window.parent.postMessage(
-          { type: 'TMA_HREF', payload: url },
-          '*'
-        );
+        window.parent.postMessage({ type: 'TMA_HREF', payload: url }, '*');
       };
 
-      const competitorf = competitors.find(competitor => competitor.id === event.competitorIds[0]);
-      const competitorsec = competitors.find(competitor => competitor.id === event.competitorIds[1]);
-
-      /* if (isMobile) {
-          return (
-              <div className="event-card" onClick={handleClick} style={{ backgroundImage: `url(${backgroundImage})` }}>
-                  <div className="card-block-container">
-                      <div className="card-f-block">
-                          <span className="card-name-block">
-                              <p>{categories.find(categorie => categorie.id === event.catId)?.name || ''}, {champs.find(champ => champ.id === event.champId)?.name || ''}</p>
-                          </span>
-                          <p className="card-date-text">{formatDate(event.startDate)}</p>
-                      </div>
-                      <div className="card-s-th-container">
-                          <div className="card-s-block">
-                              <h3 title={competitorf?.name || ''}>
-                                  <img
-                                      src={`https://sb2jerseys-altenar2.biahosted.com/63/l/${competitorf?.id}`}
-                                      alt={`${competitorf?.name || ''} logo`}
-                                      className="competitor-logo"
-                                      onError={(e) => { e.target.style.display = 'none'; }}
-                                  />
-                                  {competitorf?.name || ''}
-                              </h3>
-                              <h3 title={competitorsec?.name || ''}>
-                                  <img
-                                      src={`https://sb2jerseys-altenar2.biahosted.com/63/l/${competitorsec?.id}`}
-                                      alt={`${competitorsec?.name || ''} logo`}
-                                      className="competitor-logo"
-                                      onError={(e) => { e.target.style.display = 'none'; }}
-                                  />
-                                  {competitorsec?.name || ''}
-                              </h3>
-                          </div>
-                          <div className="card-th-block">
-                              <p className="card-score-text">+{event?.sc || ''}</p>
-                          </div>
-                      </div>
-                  </div>
-                  <div className="odds-container">
-                      <div className="odds-row">
-                          {oddsData.map(odd => (
-                              <span key={odd.id} className="odd-item">
-                                  <p>{odd.name}</p>
-                                  <p>{
-                                      (() => {
-                                          const price = Math.round(odd.price * 100) / 100;
-                                          return price.toFixed(2);
-                                      })()
-                                  }</p>
-                              </span>
-                          ))}
-                      </div>
-                  </div>
-              </div>
-          );
-      }
-*/
       return (
         <div className="event-card" onClick={handleClick} style={{ backgroundImage: `url(${backgroundImage})` }}>
           <div className="card-block-container">
             <div className="card-f-block">
-              <h3 title={competitors.find(competitor => competitor.id === event.competitorIds[0])?.name || ''}>
+              <h3 title={competitors.find((c) => c.id === event.competitorIds[0])?.name || ''}>
                 <img
                   src={`https://sb2jerseys-altenar2.biahosted.com/63/l/${event.competitorIds[0]}`}
-                  alt={`${competitors.find(competitor => competitor.id === event.competitorIds[0])?.name || ''} logo`}
+                  alt={`${competitors.find((c) => c.id === event.competitorIds[0])?.name || ''} logo`}
                   className="competitor-logo"
-                  onError={(e) => { e.target.style.display = 'none'; }}
+                  onError={(e) => (e.target.style.display = 'none')}
                 />
-                {competitors.find(competitor => competitor.id === event.competitorIds[0])?.name || ''}
+                {competitors.find((c) => c.id === event.competitorIds[0])?.name || ''}
               </h3>
             </div>
             <div className="card-s-block">
               <p className="card-date-text">{formatDate(event.startDate)}</p>
               <span className="card-name-block">
-                <p>{categories.find(categorie => categorie.id === event.catId)?.name.slice(0, 5) || ''}, {champs.find(champ => champ.id === event.champId)?.name.slice(0, 5) + '.' || ''}</p>
+                <p>
+                  {categories.find((c) => c.id === event.catId)?.name.slice(0, 5) || ''},{' '}
+                  {(champs.find((c) => c.id === event.champId)?.name.slice(0, 5) || '') + '.'}
+                </p>
               </span>
               <p className="card-score-text">+{event?.sc || ''}</p>
             </div>
             <div className="card-th-block">
-              <h3 title={competitors.find(competitor => competitor.id === event.competitorIds[1])?.name || ''}>
+              <h3 title={competitors.find((c) => c.id === event.competitorIds[1])?.name || ''}>
                 <img
                   src={`https://sb2jerseys-altenar2.biahosted.com/63/l/${event.competitorIds[1]}`}
-                  alt={`${competitors.find(competitor => competitor.id === event.competitorIds[1])?.name || ''} logo`}
+                  alt={`${competitors.find((c) => c.id === event.competitorIds[1])?.name || ''} logo`}
                   className="competitor-logo"
-                  onError={(e) => { e.target.style.display = 'none'; }}
+                  onError={(e) => (e.target.style.display = 'none')}
                 />
-                {competitors.find(competitor => competitor.id === event.competitorIds[1])?.name || ''}
+                {competitors.find((c) => c.id === event.competitorIds[1])?.name || ''}
               </h3>
             </div>
           </div>
           <div className="odds-container">
             <div className="odds-row">
-              {oddsData.map(odd => (
+              {oddsData.map((odd) => (
                 <span key={odd.id} className="odd-item">
                   <p>{odd.name}</p>
-                  <p>{
-                    (() => {
-                      const price = Math.round(odd.price * 100) / 100;
-                      return price.toFixed(2);
-                    })()
-                  }</p>
+                  <p>{(Math.round(odd.price * 100) / 100).toFixed(2)}</p>
                 </span>
               ))}
             </div>
@@ -620,89 +366,54 @@
     };
 
     const Carousel = ({ data, error }) => {
-      const carouselRefTop = useRef(null);
-      const carouselRefBottom = useRef(null);
-      const [showFadeLeftTop, setShowFadeLeftTop] = useState(true);
-      const [showFadeRightTop, setShowFadeRightTop] = useState(true);
-      const [showFadeLeftBottom, setShowFadeLeftBottom] = useState(true);
-      const [showFadeRightBottom, setShowFadeRightBottom] = useState(true);
-      const isDraggingTop = useRef(false);
-      const isDraggingBottom = useRef(false);
-      const startXTop = useRef(0);
-      const startXBottom = useRef(0);
-      const scrollLeftStartTop = useRef(0);
-      const scrollLeftStartBottom = useRef(0);
+      const containerRef = useRef(null);
+      const isDragging = useRef(false);
+      const startX = useRef(0);
+      const scrollLeftStart = useRef(0);
 
-      const checkScroll = (carouselRef, setShowFadeLeft, setShowFadeRight) => {
-        if (carouselRef.current) {
-          const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
-          setShowFadeLeft(scrollLeft > 0);
-          setShowFadeRight(scrollLeft < scrollWidth - clientWidth - 1);
-        }
-      };
-
-      useEffect(() => {
-        const carouselTop = carouselRefTop.current;
-        const carouselBottom = carouselRefBottom.current;
-        if (carouselTop) {
-          checkScroll(carouselRefTop, setShowFadeLeftTop, setShowFadeRightTop);
-          carouselTop.addEventListener('scroll', () => checkScroll(carouselRefTop, setShowFadeLeftTop, setShowFadeRightTop));
-        }
-        if (carouselBottom) {
-          checkScroll(carouselRefBottom, setShowFadeLeftBottom, setShowFadeRightBottom);
-          carouselBottom.addEventListener('scroll', () => checkScroll(carouselRefBottom, setShowFadeLeftBottom, setShowFadeRightBottom));
-        }
-        return () => {
-          if (carouselTop) carouselTop.removeEventListener('scroll', () => checkScroll(carouselRefTop, setShowFadeLeftTop, setShowFadeRightTop));
-          if (carouselBottom) carouselBottom.removeEventListener('scroll', () => checkScroll(carouselRefBottom, setShowFadeLeftBottom, setShowFadeRightBottom));
-        };
-      }, [data]);
-
-      const scrollLeft = (carouselRef) => {
-        if (carouselRef.current) {
-          carouselRef.current.scrollBy({ left: -388, behavior: 'smooth' });
-        }
-      };
-
-      const scrollRight = (carouselRef) => {
-        if (carouselRef.current) {
-          carouselRef.current.scrollBy({ left: 388, behavior: 'smooth' });
-        }
-      };
-
-      const handleMouseDown = (e, carouselRef, isDragging, startX, scrollLeftStart) => {
-        if (carouselRef.current) {
+      const handleStart = (clientX) => {
+        if (containerRef.current) {
           isDragging.current = true;
-          startX.current = e.pageX;
-          scrollLeftStart.current = carouselRef.current.scrollLeft;
-          carouselRef.current.style.cursor = 'grabbing';
-          carouselRef.current.style.scrollBehavior = 'auto';
-          carouselRef.current.style.scrollSnapType = 'none';
+          startX.current = clientX;
+          scrollLeftStart.current = containerRef.current.scrollLeft;
+          containerRef.current.style.cursor = 'grabbing';
+          containerRef.current.style.scrollBehavior = 'auto';
+          containerRef.current.style.scrollSnapType = 'none';
         }
       };
 
-      const handleMouseMove = (e, carouselRef, isDragging, startX, scrollLeftStart) => {
-        if (!isDragging.current || !carouselRef.current) return;
+      const handleMove = (clientX) => {
+        if (!isDragging.current || !containerRef.current) return;
+        const walk = clientX - startX.current;
+        containerRef.current.scrollLeft = scrollLeftStart.current - walk;
+      };
+
+      const handleEnd = () => {
+        if (containerRef.current) {
+          isDragging.current = false;
+          containerRef.current.style.cursor = 'grab';
+          containerRef.current.style.scrollBehavior = 'smooth';
+          containerRef.current.style.scrollSnapType = '';
+        }
+      };
+
+      const handleMouseDown = (e) => {
         e.preventDefault();
-        const x = e.pageX;
-        const walk = x - startX.current;
-        carouselRef.current.scrollLeft = scrollLeftStart.current - walk;
+        handleStart(e.clientX);
       };
 
-      const handleMouseUp = (carouselRef, isDragging) => {
-        if (carouselRef.current) {
-          isDragging.current = false;
-          carouselRef.current.style.cursor = 'grab';
-          carouselRef.current.style.scrollBehavior = 'smooth';
-        }
+      const handleMouseMove = (e) => {
+        if (isDragging.current) e.preventDefault();
+        handleMove(e.clientX);
       };
 
-      const handleMouseLeave = (carouselRef, isDragging) => {
-        if (carouselRef.current) {
-          isDragging.current = false;
-          carouselRef.current.style.cursor = 'grab';
-          carouselRef.current.style.scrollBehavior = 'smooth';
-        }
+      const handleTouchStart = (e) => {
+        handleStart(e.touches[0].clientX);
+      };
+
+      const handleTouchMove = (e) => {
+        if (isDragging.current) e.preventDefault();
+        handleMove(e.touches[0].clientX);
       };
 
       if (error) {
@@ -726,18 +437,21 @@
       const bottomEvents = data.events.slice(halfLength);
 
       return (
-        <div className={`carousel-container fade-left fade-right ${showFadeLeftTop && showFadeLeftBottom ? '' : 'no-fade-left'} ${showFadeRightTop && showFadeRightBottom ? '' : 'no-fade-right'}`}>
+        <div
+          ref={containerRef}
+          className="carousel-container"
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleEnd}
+          onMouseLeave={handleEnd}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleEnd}
+          style={{ cursor: 'grab' }}
+        >
           <div className="carousel-row">
-            <div
-              ref={carouselRefTop}
-              className="carousel-track scrollbar-hide"
-              onMouseDown={(e) => handleMouseDown(e, carouselRefTop, isDraggingTop, startXTop, scrollLeftStartTop)}
-              onMouseMove={(e) => handleMouseMove(e, carouselRefTop, isDraggingTop, startXTop, scrollLeftStartTop)}
-              onMouseUp={() => handleMouseUp(carouselRefTop, isDraggingTop)}
-              onMouseLeave={() => handleMouseLeave(carouselRefTop, isDraggingTop)}
-              style={{ cursor: 'grab' }}
-            >
-              {topEvents.map(event => (
+            <div className="carousel-track">
+              {topEvents.map((event) => (
                 <EventCard
                   key={event.id}
                   event={event}
@@ -749,16 +463,8 @@
                 />
               ))}
             </div>
-            <div
-              ref={carouselRefBottom}
-              className="carousel-track scrollbar-hide"
-              onMouseDown={(e) => handleMouseDown(e, carouselRefBottom, isDraggingBottom, startXBottom, scrollLeftStartBottom)}
-              onMouseMove={(e) => handleMouseMove(e, carouselRefBottom, isDraggingBottom, startXBottom, scrollLeftStartBottom)}
-              onMouseUp={() => handleMouseUp(carouselRefBottom, isDraggingBottom)}
-              onMouseLeave={() => handleMouseLeave(carouselRefBottom, isDraggingBottom)}
-              style={{ cursor: 'grab' }}
-            >
-              {bottomEvents.map(event => (
+            <div className="carousel-track">
+              {bottomEvents.map((event) => (
                 <EventCard
                   key={event.id}
                   event={event}
@@ -771,7 +477,6 @@
               ))}
             </div>
           </div>
-
         </div>
       );
     };
@@ -785,28 +490,20 @@
           try {
             const urlParams = new URLSearchParams(window.location.search);
             const culture = urlParams.get('culture') || 'ka-GE';
-
             const response = await fetch(
               `https://sb2frontend-altenar2.biahosted.com/api/widget/GetTopEvents?culture=${culture}&integration=ambassadoribet`,
               {
                 method: 'GET',
-                headers: {
-                  'Accept': 'application/json'
-                }
+                headers: { Accept: 'application/json' },
               }
             );
-
-            if (!response.ok) {
-              throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-
+            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
             const result = await response.json();
             setData(result);
           } catch (err) {
             setError(err.message);
           }
         };
-
         fetchData();
       }, []);
 
