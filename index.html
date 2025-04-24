@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Event Carousel</title>
+  <style>
+    @font-face {
+      font-family: "Noto Sans Ambassadori";
+      font-style: normal;
+      font-display: swap;
+      src: url(https://usernamenotavailable12.github.io/Font-Repository/NotoSansAmbassadori-Regular.ttf);
+    }
+
+    body {
+      margin: 0;
+    }
+
+    .card-block-container {
+      display: flex;
+      height: 76%;
+    }
+
+    .card-f-block,
+    .card-s-block,
+    .card-th-block {
+      width: 100%;
+      position: relative;
+    }
+
+    .card-f-block h3,
+    .card-th-block h3 {
+      margin: 0;
+      color: #FFF;
+      font-family: 'Noto Sans Ambassadori';
+      font-size: 10px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 20px;
+      position: absolute;
+      top: 15px;
+      white-space: nowrap;
+      max-width: 90px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      img {
+        margin: auto;
+      }
+    }
+
+    .card-f-block h3 {
+      margin-left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .card-th-block h3 {
+      margin-right: 50%;
+      transform: translateX(50%);
+    }
+
+    .card-score-text {
+      color: #F133FA;
+      font-family: 'Noto Sans Ambassadori';
+      font-size: 12px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 20px;
+      position: absolute;
+      margin: 0 0 0 50%;
+      bottom: 12px;
+      transform: translateX(-50%);
+    }
+
+    .card-name-block p {
+      color: #FFF;
+      font-family: 'Noto Sans Ambassadori';
+      font-size: 12px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 20px;
+      opacity: 0.6;
+      margin: 0;
+      margin-left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      position: absolute;
+      top: 32px;
+    }
+
+    .card-date-text {
+      margin: 0;
+      text-align: center;
+      color: #FFF;
+      font-family: 'Noto Sans Ambassadori';
+      font-size: 12px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 20px;
+    }
+
+    .card-f-block h3 {
+      left: 0;
+    }
+
+    .card-th-block h3 {
+      right: 0;
+    }
+
+    .carousel-container {
+      align-self: stretch;
+      background: url("https://www.ambassadoribet.com/_internal/ts-images/5da2b4d5-59f6-412a-82c3-f6a272b532be/dev/81558d7e-f4a1-4117-93e8-20a501dda763/d56ebf81b0a24144dab8dfa196fed1c5d65b10a2.png?auto=format%2Ccompress");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: cover;
+      border-radius: 0px;
+      position: relative;
+      width: 100%;
+      height: 320px;
+    }
+
+    .carousel-row {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      padding: 14px;
+    }
+
+    .carousel-track {
+      display: flex;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      position: relative;
+      user-select: none;
+      gap: 12px;
+    }
+
+    .fade-left::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 117px;
+      height: 100%;
+      flex-shrink: 0;
+      background: linear-gradient(90deg, #121212 0%, rgba(18, 18, 18, 0.00) 88.89%);
+      border-radius: 0px;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.5;
+      transition: opacity 0.3s ease;
+    }
+
+    .fade-right::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 117px;
+      height: 100%;
+      flex-shrink: 0;
+      background: linear-gradient(270deg, #121212 0%, rgba(18, 18, 18, 0.00) 88.89%);
+      border-radius: 16px;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.5;
+      transition: opacity 0.3s ease;
+    }
+
+    .no-fade-left::before {
+      opacity: 0;
+    }
+
+    .no-fade-right::after {
+      opacity: 0;
+    }
+
+    .carousel-track .event-card:last-of-type {
+      margin-right: 0px;
+    }
+
+    .carousel-track:first-child .event-card {
+      margin-left: 0px;
+    }
+
+    .error-message {
+      color: #dc2626;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 80rem;
+      padding-bottom: 1.5rem;
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+      text-align: center;
+    }
+
+    .event-card {
+      backdrop-filter: blur(30px);
+      background: rgba(255, 255, 255, 0.02);
+      background-image: url('https://images.takeshape.io/default-event-background.jpg');
+      background-size: cover;
+      background-position: center;
+      border-radius: 12px;
+      box-shadow: 2px 2px 4px 2px rgba(0, 0, 0, 0.25);
+      box-sizing: border-box;
+      cursor: pointer;
+      flex-shrink: 0;
+      height: 145px;
+      padding: 1.3rem;
+      transition: box-shadow 0.2s ease;
+      width: 326px;
+      position: relative;
+      z-index: 0;
+    }
+
+    .event-card:hover {
+      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .event-date {
+      color: #4b5563;
+      font-size: 0.275rem;
+    }
+
+    .event-title {
+      color: #1f2937;
+      font-size: 0.425rem;
+      font-weight: 600;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+
+    .no-events-message {
+      color: #4b5563;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 80rem;
+      padding-bottom: 1.5rem;
+      padding-top: 1.5rem;
+      text-align: center;
+    }
+
+    .odd-item {
+      align-items: center;
+      background: #3F0D64;
+      border-radius: 15px;
+      color: #FFF;
+      display: flex;
+      font-family: 'Noto Sans Ambassadori';
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 500;
+      justify-content: space-between;
+      line-height: 20px;
+      padding: 10px 12px;
+      width: 100%;
+    }
+
+    .odd-item p {
+      margin: 0;
+    }
+
+    .odds-row {
+      display: flex;
+      gap: 12px;
+      justify-content: space-between;
+    }
+
+    .scrollbar-hide {
+      scrollbar-width: none;
+    }
+
+    .scrollbar-hide::-webkit-scrollbar {
+      display: none;
+    }
+
+    #app-container {
+      background-color: transparent;
+      height: 320px;
+    }
+
+    .competitor-logo {
+      width: 34px;
+      height: 34px;
+      margin-right: 8px;
+      vertical-align: middle;
+      display: inline-block;
+    }
+
+    /*         @media (max-width: 768px) {
+            .carousel-container {
+                display: inline-flex;
+                overflow: hidden;
+                justify-content: flex-end;
+                align-items: center;
+                background: url(https://images.takeshape.io/5da2b4d5-59f6-412a-82c3-f6a272b532be/dev/cb93c5c1-791b-4edf-a146-00e17c27198a/ffa549b7395d5c97d05b17f87954629f.webp) lightgray 50% / cover no-repeat;
+            }
+
+            .carousel-track {
+                padding: 6px 10px;
+            }
+
+            .event-card {
+                width: 217px;
+                height: 120px;
+                aspect-ratio: 217/120;
+                padding: 6px;
+            }
+
+            .card-block-container {
+                height: 72%;
+                display: block;
+            }
+
+            .card-f-block {
+                width: 100%;
+                position: relative;
+                display: flex;
+                justify-content: space-between;
+            }
+
+            .card-name-block p {
+                position: inherit;
+                margin: 0;
+                transform: translateX(0);
+                color: #FFF;
+                opacity: 1;
+                font-family: "Noto Sans Ambassadori";
+                font-size: 10px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 12px;
+                max-width: 130px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .card-date-text {
+                color: #FFF;
+                font-family: "Noto Sans Ambassadori";
+                font-size: 10px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 12px;
+            }
+
+            .card-s-block {
+                position: inherit;
+                width: auto;
+                align-content: center;
+                height: 100%;
+                justify-content: space-evenly;
+                display: flex;
+                flex-direction: column;
+                margin-left: 0;
+            }
+
+            .card-s-block h3 {
+                margin: 0;
+                color: #FFF;
+                font-family: "Noto Sans Ambassadori";
+                font-size: 12px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 12px;
+                max-width: 135px;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+
+            .card-score-text {
+                position: inherit;
+                margin: 0;
+                transform: translateX(0);
+                color: #F133FA;
+                font-family: "Noto Sans Ambassadori";
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 14px;
+                padding: 4px;
+                gap: 10px;
+                border-radius: 4px;
+                border: 1px solid #3F0D64;
+            }
+
+            .card-th-block {
+                display: block;
+                position: inherit;
+                width: auto;
+                align-content: center;
+                height: 100%;
+            }
+
+            .card-s-th-container {
+                height: 84%;
+                width: 100%;
+                display: inline-flex;
+                justify-content: space-between;
+            }
+
+            .odds-row {
+                display: flex;
+                gap: 4px;
+                justify-content: space-between;
+                width: 100%;
+            }
+
+            .odd-item {
+                display: flex;
+                width: 65px;
+                box-sizing: border-box;
+                padding: 8px 4px;
+                justify-content: space-between;
+                align-items: center;
+                flex-shrink: 0;
+            }
+
+            .odd-item p {
+                color: #FFF;
+                font-family: "Noto Sans Ambassadori";
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 700;
+                line-height: 16px;
+            }
+
+            .competitor-logo {
+                width: 16px;
+                height: 16px;
+                margin-right: 4px;
+            }
+        } */
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.22.9/babel.min.js"></script>
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    const formatDate = (dateString) => {
+      const date = new Date(dateString);
+      const month = date.getMonth() + 1;
+      const day = date.getDate();
+      const hour = date.getHours();
+      const minute = date.getMinutes().toString().padStart(2, '0');
+      return `${month}.${day}-${hour}:${minute}`;
+    };
+
+    const getOddsForMarket = (marketId, markets, odds) => {
+      const market = markets.find(m => m.id === marketId);
+      if (!market) return [];
+      return market.oddIds.map(oddId => odds.find(o => o.id === oddId)).filter(Boolean);
+    };
+
+    const backgroundImages = {
+      default: 'https://www.ambassadoribet.com/_internal/ts-images/5da2b4d5-59f6-412a-82c3-f6a272b532be/dev/f7535abc-73c7-40fd-bca0-6b547f3c57da/b64a4b9fc2a399111df3fe2a92b88a4d8dc52132.png?auto=format%2Ccompress',
+      sports: {
+        '67': 'https://www.ambassadoribet.com/_internal/ts-images/5da2b4d5-59f6-412a-82c3-f6a272b532be/dev/2cd76afe-7518-4a3b-b450-423054f0264b/b3f45ba2a9849b8abb9c41ad6f2eea893c59f37e.png?auto=format%2Ccompress',
+        '66': 'https://www.ambassadoribet.com/_internal/ts-images/5da2b4d5-59f6-412a-82c3-f6a272b532be/dev/f7535abc-73c7-40fd-bca0-6b547f3c57da/b64a4b9fc2a399111df3fe2a92b88a4d8dc52132.png?auto=format%2Ccompress',
+        '84': 'https://www.ambassadoribet.com/_internal/ts-images/5da2b4d5-59f6-412a-82c3-f6a272b532be/dev/22c4b458-ce8a-4c52-8486-259953496316/sdddddd-01.png?auto=format%2Ccompress',
+      },
+      champs: {
+        'premier-league': 'https://www.ambassadoribet.com/_internal/ts-images/5da2b4d5-59f6-412a-82c3-f6a272b532be/dev/22c4b458-ce8a-4c52-8486-259953496316/sdddddd-01.png?auto=format%2Ccompress',
+      }
+    };
+
+    const getBackgroundImage = (sportId, champId) => {
+      if (champId && backgroundImages.champs[champId]) {
+        return backgroundImages.champs[champId];
+      }
+      if (sportId && backgroundImages.sports[sportId]) {
+        return backgroundImages.sports[sportId];
+      }
+      return backgroundImages.default;
+    };
+
+    const EventCard = ({ event, markets, odds, competitors, champs, categories }) => {
+      const oddsData = getOddsForMarket(event.marketIds[0], markets, odds);
+      const [isMobile, setIsMobile] = React.useState(window.innerWidth <= 768);
+      const backgroundImage = getBackgroundImage(event.sportId, event.champId);
+
+      useEffect(() => {
+        const handleResize = () => {
+          setIsMobile(window.innerWidth <= 768);
+        };
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+      }, []);
+
+      const handleClick = () => {
+        const url = `/sportsbook/event/${event.id}`;
+        window.parent.postMessage(
+          { type: 'TMA_HREF', payload: url },
+          '*'
+        );
+      };
+
+      const competitorf = competitors.find(competitor => competitor.id === event.competitorIds[0]);
+      const competitorsec = competitors.find(competitor => competitor.id === event.competitorIds[1]);
+
+      /* if (isMobile) {
+          return (
+              <div className="event-card" onClick={handleClick} style={{ backgroundImage: `url(${backgroundImage})` }}>
+                  <div className="card-block-container">
+                      <div className="card-f-block">
+                          <span className="card-name-block">
+                              <p>{categories.find(categorie => categorie.id === event.catId)?.name || ''}, {champs.find(champ => champ.id === event.champId)?.name || ''}</p>
+                          </span>
+                          <p className="card-date-text">{formatDate(event.startDate)}</p>
+                      </div>
+                      <div className="card-s-th-container">
+                          <div className="card-s-block">
+                              <h3 title={competitorf?.name || ''}>
+                                  <img
+                                      src={`https://sb2jerseys-altenar2.biahosted.com/63/l/${competitorf?.id}`}
+                                      alt={`${competitorf?.name || ''} logo`}
+                                      className="competitor-logo"
+                                      onError={(e) => { e.target.style.display = 'none'; }}
+                                  />
+                                  {competitorf?.name || ''}
+                              </h3>
+                              <h3 title={competitorsec?.name || ''}>
+                                  <img
+                                      src={`https://sb2jerseys-altenar2.biahosted.com/63/l/${competitorsec?.id}`}
+                                      alt={`${competitorsec?.name || ''} logo`}
+                                      className="competitor-logo"
+                                      onError={(e) => { e.target.style.display = 'none'; }}
+                                  />
+                                  {competitorsec?.name || ''}
+                              </h3>
+                          </div>
+                          <div className="card-th-block">
+                              <p className="card-score-text">+{event?.sc || ''}</p>
+                          </div>
+                      </div>
+                  </div>
+                  <div className="odds-container">
+                      <div className="odds-row">
+                          {oddsData.map(odd => (
+                              <span key={odd.id} className="odd-item">
+                                  <p>{odd.name}</p>
+                                  <p>{
+                                      (() => {
+                                          const price = Math.round(odd.price * 100) / 100;
+                                          return price.toFixed(2);
+                                      })()
+                                  }</p>
+                              </span>
+                          ))}
+                      </div>
+                  </div>
+              </div>
+          );
+      }
+*/
+      return (
+        <div className="event-card" onClick={handleClick} style={{ backgroundImage: `url(${backgroundImage})` }}>
+          <div className="card-block-container">
+            <div className="card-f-block">
+              <h3 title={competitors.find(competitor => competitor.id === event.competitorIds[0])?.name || ''}>
+                <img
+                  src={`https://sb2jerseys-altenar2.biahosted.com/63/l/${event.competitorIds[0]}`}
+                  alt={`${competitors.find(competitor => competitor.id === event.competitorIds[0])?.name || ''} logo`}
+                  className="competitor-logo"
+                  onError={(e) => { e.target.style.display = 'none'; }}
+                />
+                {competitors.find(competitor => competitor.id === event.competitorIds[0])?.name || ''}
+              </h3>
+            </div>
+            <div className="card-s-block">
+              <p className="card-date-text">{formatDate(event.startDate)}</p>
+              <span className="card-name-block">
+                <p>{categories.find(categorie => categorie.id === event.catId)?.name.slice(0, 5) || ''}, {champs.find(champ => champ.id === event.champId)?.name.slice(0, 5) + '.' || ''}</p>
+              </span>
+              <p className="card-score-text">+{event?.sc || ''}</p>
+            </div>
+            <div className="card-th-block">
+              <h3 title={competitors.find(competitor => competitor.id === event.competitorIds[1])?.name || ''}>
+                <img
+                  src={`https://sb2jerseys-altenar2.biahosted.com/63/l/${event.competitorIds[1]}`}
+                  alt={`${competitors.find(competitor => competitor.id === event.competitorIds[1])?.name || ''} logo`}
+                  className="competitor-logo"
+                  onError={(e) => { e.target.style.display = 'none'; }}
+                />
+                {competitors.find(competitor => competitor.id === event.competitorIds[1])?.name || ''}
+              </h3>
+            </div>
+          </div>
+          <div className="odds-container">
+            <div className="odds-row">
+              {oddsData.map(odd => (
+                <span key={odd.id} className="odd-item">
+                  <p>{odd.name}</p>
+                  <p>{
+                    (() => {
+                      const price = Math.round(odd.price * 100) / 100;
+                      return price.toFixed(2);
+                    })()
+                  }</p>
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    const Carousel = ({ data, error }) => {
+      const carouselRefTop = useRef(null);
+      const carouselRefBottom = useRef(null);
+      const [showFadeLeftTop, setShowFadeLeftTop] = useState(true);
+      const [showFadeRightTop, setShowFadeRightTop] = useState(true);
+      const [showFadeLeftBottom, setShowFadeLeftBottom] = useState(true);
+      const [showFadeRightBottom, setShowFadeRightBottom] = useState(true);
+      const isDraggingTop = useRef(false);
+      const isDraggingBottom = useRef(false);
+      const startXTop = useRef(0);
+      const startXBottom = useRef(0);
+      const scrollLeftStartTop = useRef(0);
+      const scrollLeftStartBottom = useRef(0);
+
+      const checkScroll = (carouselRef, setShowFadeLeft, setShowFadeRight) => {
+        if (carouselRef.current) {
+          const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
+          setShowFadeLeft(scrollLeft > 0);
+          setShowFadeRight(scrollLeft < scrollWidth - clientWidth - 1);
+        }
+      };
+
+      useEffect(() => {
+        const carouselTop = carouselRefTop.current;
+        const carouselBottom = carouselRefBottom.current;
+        if (carouselTop) {
+          checkScroll(carouselRefTop, setShowFadeLeftTop, setShowFadeRightTop);
+          carouselTop.addEventListener('scroll', () => checkScroll(carouselRefTop, setShowFadeLeftTop, setShowFadeRightTop));
+        }
+        if (carouselBottom) {
+          checkScroll(carouselRefBottom, setShowFadeLeftBottom, setShowFadeRightBottom);
+          carouselBottom.addEventListener('scroll', () => checkScroll(carouselRefBottom, setShowFadeLeftBottom, setShowFadeRightBottom));
+        }
+        return () => {
+          if (carouselTop) carouselTop.removeEventListener('scroll', () => checkScroll(carouselRefTop, setShowFadeLeftTop, setShowFadeRightTop));
+          if (carouselBottom) carouselBottom.removeEventListener('scroll', () => checkScroll(carouselRefBottom, setShowFadeLeftBottom, setShowFadeRightBottom));
+        };
+      }, [data]);
+
+      const scrollLeft = (carouselRef) => {
+        if (carouselRef.current) {
+          carouselRef.current.scrollBy({ left: -388, behavior: 'smooth' });
+        }
+      };
+
+      const scrollRight = (carouselRef) => {
+        if (carouselRef.current) {
+          carouselRef.current.scrollBy({ left: 388, behavior: 'smooth' });
+        }
+      };
+
+      const handleMouseDown = (e, carouselRef, isDragging, startX, scrollLeftStart) => {
+        if (carouselRef.current) {
+          isDragging.current = true;
+          startX.current = e.pageX;
+          scrollLeftStart.current = carouselRef.current.scrollLeft;
+          carouselRef.current.style.cursor = 'grabbing';
+          carouselRef.current.style.scrollBehavior = 'auto';
+          carouselRef.current.style.scrollSnapType = 'none';
+        }
+      };
+
+      const handleMouseMove = (e, carouselRef, isDragging, startX, scrollLeftStart) => {
+        if (!isDragging.current || !carouselRef.current) return;
+        e.preventDefault();
+        const x = e.pageX;
+        const walk = x - startX.current;
+        carouselRef.current.scrollLeft = scrollLeftStart.current - walk;
+      };
+
+      const handleMouseUp = (carouselRef, isDragging) => {
+        if (carouselRef.current) {
+          isDragging.current = false;
+          carouselRef.current.style.cursor = 'grab';
+          carouselRef.current.style.scrollBehavior = 'smooth';
+        }
+      };
+
+      const handleMouseLeave = (carouselRef, isDragging) => {
+        if (carouselRef.current) {
+          isDragging.current = false;
+          carouselRef.current.style.cursor = 'grab';
+          carouselRef.current.style.scrollBehavior = 'smooth';
+        }
+      };
+
+      if (error) {
+        return (
+          <div className="error-message">
+            <p>Error fetching events: {error}</p>
+          </div>
+        );
+      }
+
+      if (!data || !data.events || data.events.length === 0) {
+        return (
+          <div className="no-events-message">
+            <p>No events available</p>
+          </div>
+        );
+      }
+
+      const halfLength = Math.ceil(data.events.length / 2);
+      const topEvents = data.events.slice(0, halfLength);
+      const bottomEvents = data.events.slice(halfLength);
+
+      return (
+        <div className={`carousel-container fade-left fade-right ${showFadeLeftTop && showFadeLeftBottom ? '' : 'no-fade-left'} ${showFadeRightTop && showFadeRightBottom ? '' : 'no-fade-right'}`}>
+          <div className="carousel-row">
+            <div
+              ref={carouselRefTop}
+              className="carousel-track scrollbar-hide"
+              onMouseDown={(e) => handleMouseDown(e, carouselRefTop, isDraggingTop, startXTop, scrollLeftStartTop)}
+              onMouseMove={(e) => handleMouseMove(e, carouselRefTop, isDraggingTop, startXTop, scrollLeftStartTop)}
+              onMouseUp={() => handleMouseUp(carouselRefTop, isDraggingTop)}
+              onMouseLeave={() => handleMouseLeave(carouselRefTop, isDraggingTop)}
+              style={{ cursor: 'grab' }}
+            >
+              {topEvents.map(event => (
+                <EventCard
+                  key={event.id}
+                  event={event}
+                  markets={data.markets}
+                  odds={data.odds}
+                  competitors={data.competitors}
+                  champs={data.champs}
+                  categories={data.categories}
+                />
+              ))}
+            </div>
+            <div
+              ref={carouselRefBottom}
+              className="carousel-track scrollbar-hide"
+              onMouseDown={(e) => handleMouseDown(e, carouselRefBottom, isDraggingBottom, startXBottom, scrollLeftStartBottom)}
+              onMouseMove={(e) => handleMouseMove(e, carouselRefBottom, isDraggingBottom, startXBottom, scrollLeftStartBottom)}
+              onMouseUp={() => handleMouseUp(carouselRefBottom, isDraggingBottom)}
+              onMouseLeave={() => handleMouseLeave(carouselRefBottom, isDraggingBottom)}
+              style={{ cursor: 'grab' }}
+            >
+              {bottomEvents.map(event => (
+                <EventCard
+                  key={event.id}
+                  event={event}
+                  markets={data.markets}
+                  odds={data.odds}
+                  competitors={data.competitors}
+                  champs={data.champs}
+                  categories={data.categories}
+                />
+              ))}
+            </div>
+          </div>
+
+        </div>
+      );
+    };
+
+    const App = () => {
+      const [data, setData] = useState(null);
+      const [error, setError] = useState(null);
+
+      useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const urlParams = new URLSearchParams(window.location.search);
+            const culture = urlParams.get('culture') || 'ka-GE';
+
+            const response = await fetch(
+              `https://sb2frontend-altenar2.biahosted.com/api/widget/GetTopEvents?culture=${culture}&integration=ambassadoribet`,
+              {
+                method: 'GET',
+                headers: {
+                  'Accept': 'application/json'
+                }
+              }
+            );
+
+            if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            setData(result);
+          } catch (err) {
+            setError(err.message);
+          }
+        };
+
+        fetchData();
+      }, []);
+
+      return (
+        <div id="app-container">
+          <Carousel data={data} error={error} />
+        </div>
+      );
+    };
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+  </script>
+</body>
+
+</html>
